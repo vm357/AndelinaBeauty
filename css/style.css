@@ -456,14 +456,17 @@ body {
 
 .star-rating i {
   font-size: 1.8rem;
-  color: #ccc;
+  color: #d4af37;
   cursor: pointer;
-  margin: 0 5px;
-  transition: color 0.3s ease;
+  transition: transform 0.2s ease;
+}
+
+.star-rating i:hover {
+  transform: scale(1.15);
 }
 
 .star-rating i.active {
-  color: var(--gold);
+  color: #d4af37; 
 }
 
 @media (max-width: 576px) {
@@ -471,6 +474,97 @@ body {
     padding: 25px;
   }
 }
+
+/* Review sorting section/buttons */
+/* Review Toolbar */
+.reviews-toolbar {
+  max-width: 700px;
+  margin: 0 auto;
+  margin-bottom: 2.5rem; /* instead of mb-5 */
+}
+
+.stars-large {
+  font-size: 1.6rem;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.sort-buttons .btn {
+  border-radius: 30px;
+  padding: 6px 18px;
+  font-weight: 500;
+}
+
+.sort-buttons .btn.active {
+  background-color: #f3c6d4;
+  border-color: #d4a373;
+  color: #7a2e3a;
+}
+
+/* Star styles */
+.stars {
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+/* ===========================
+   Admin Delete Button
+=========================== */
+
+.admin-delete-btn {
+  background-color: transparent;
+  border: 1px solid #e6b7c8; /* soft blush */
+  color: #b76e79; /* dusty rose */
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+/* Hover = luxury warning */
+.admin-delete-btn:hover {
+  background-color: #f8dce6;
+  border-color: #d4a373; /* soft gold */
+  color: #7a2e3a;
+  box-shadow: 0 6px 14px rgba(212, 163, 115, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Optional: subtle shake on hover to signal danger */
+.admin-delete-btn:active {
+  transform: scale(0.96);
+}
+
+.admin-delete-btn {
+  opacity: 0;
+  animation: adminFadeIn 0.4s ease forwards;
+}
+
+@keyframes adminFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+#confirmDeleteBtn {
+  background: linear-gradient(135deg, #d16c8c, #b76e79);
+  border: none;
+}
+
+
+/* Make modal background slightly darker and more elegant */
+.modal-content {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Center the image */
+.modal-body img {
+  max-height: 80vh;
+  object-fit: contain;
+}
+
 /* END TESTIMONIALS.HTML PAGE - TESTIMONIALS SECTION */
 
 /* ABOUTUS.HTML PAGE - DESCRIPTION SECTION */
