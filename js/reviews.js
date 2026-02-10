@@ -13,6 +13,7 @@ const stars = document.querySelectorAll(".star-rating i");
 /* Default reviews (seed) */
 const defaultReviews = [
   {
+    id: 1,
     name: "Sarah J.",
     rating: 5,
     text: "Andelina Beauty transformed my nail game!",
@@ -99,7 +100,7 @@ document.addEventListener("keydown", (e) => {
 // State
 let currentSort = "newest";
 
-//Sorting
+// Sorting
 function setSort(type) {
   currentSort = type;
   renderReviews();
@@ -111,6 +112,20 @@ function renderReviews() {
   container.innerHTML = "";
 
   let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+  // Ensure all reviews have IDs
+  let updated = false;
+  reviews.forEach(r => {
+    if (!r.id) {
+      r.id = Date.now() + Math.random();
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+  }
+
 
 if (reviews.length === 0) {
   document.getElementById("avgNumber").textContent = "(0.0)";
@@ -152,8 +167,8 @@ if (reviews.length === 0) {
           
           ${Admin.isEnabled() ? `
             <button
-              class="btn admin-delete-btn mt-3"
-              onclick="openDeleteModal(${index})"
+              class="btn admin-delete-btn mt-3 delete-btn"
+              data-id="${r.id}"
             >
               Delete
             </button>
@@ -165,6 +180,13 @@ if (reviews.length === 0) {
   });
 }
 /* End render reviews section 2.0 */
+
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete-btn")) {
+    const id = Number(e.target.dataset.id);
+    openDeleteModal(id);
+  }
+});
 
 /* ===========================
    IMAGE LIGHTBOX
@@ -219,8 +241,12 @@ document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => {
   if (pendingDeleteIndex === null) return;
 
   const reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-  reviews.splice(pendingDeleteIndex, 1);
-  localStorage.setItem("reviews", JSON.stringify(reviews));
+  
+  const updatedReviews = reviews.filter(
+    r => r.id !== pendingDeleteIndex
+  );
+
+  localStorage.setItem("reviews", JSON.stringify(updatedReviews));
 
   pendingDeleteIndex = null;
 
@@ -230,8 +256,6 @@ document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => {
 
   renderReviews();
 });
-
-
 
 /* STAR RATING */
 stars.forEach((star) => {
@@ -279,6 +303,7 @@ form.addEventListener("submit", e => {
   }
 
   const review = {
+    id: Date.now(), // Unique ID for each review
     name: name || "Anonymous",
     rating: Number(rating),
     text,

@@ -556,7 +556,7 @@ body {
 
 /* Make modal background slightly darker and more elegant */
 .modal-content {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 189, 213, 0.93);
 }
 
 /* Center the image */
