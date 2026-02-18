@@ -147,11 +147,31 @@ body {
   text-transform: uppercase;
 }
 
+/*
 @media (max-width: 480px) {
   .hero-title {
     line-height: 1.15;
   }
 }
+*/
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    line-height: 1.2;
+    padding: 0 1rem; /* prevent overflow */
+  }
+
+  .hero-new {
+    min-height: 90vh; /* hero fills screen */
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 
 /* Animations */
 @keyframes slideUp {
