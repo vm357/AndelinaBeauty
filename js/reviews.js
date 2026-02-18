@@ -1,7 +1,32 @@
+import { initializeApp } from 
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import { 
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+} from 
+  "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAbnsmA5MFnfz82Z_dv_xmYD6cbLY3nwV0",
+  authDomain: "andelina-beauty-reviews.firebaseapp.com",
+  projectId: "andelina-beauty-reviews",
+  storageBucket: "andelina-beauty-reviews.firebasestorage.app",
+  messagingSenderId: "675748450323",
+  appId: "1:675748450323:web:6c43e4453f9a61f59a6fe6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 /* ===========================
    CONFIG
 =========================== */
 document.addEventListener("DOMContentLoaded", () => {
+
 /* DOM elements */
 const reviewsContainer = document.getElementById("reviewsContainer");
 const form = document.getElementById("reviewForm");
@@ -9,23 +34,6 @@ const ratingInput = document.getElementById("rating");
 const imageInput = document.getElementById("reviewImage");
 const imagePreview = document.getElementById("imagePreview");
 const stars = document.querySelectorAll(".star-rating i");
-
-/* Default reviews (seed) */
-const defaultReviews = [
-  {
-    id: 1,
-    name: "Sarah J.",
-    rating: 5,
-    text: "Andelina Beauty transformed my nail game!",
-    image: null,
-    date: "2026-01-01"
-  }
-];
-
-if (!localStorage.getItem("reviews")) {
-  localStorage.setItem("reviews", JSON.stringify(defaultReviews));
-}
-/* End default reviews (seed) */
 
 document.querySelectorAll(".sort-buttons button").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -107,25 +115,15 @@ function setSort(type) {
 }
 
 // Render reviews
-function renderReviews() {
+async function renderReviews() {
   const container = document.querySelector("#reviewsContainer");
   container.innerHTML = "";
 
-  let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-
-  // Ensure all reviews have IDs
-  let updated = false;
-  reviews.forEach(r => {
-    if (!r.id) {
-      r.id = Date.now() + Math.random();
-      updated = true;
-    }
-  });
-
-  if (updated) {
-    localStorage.setItem("reviews", JSON.stringify(reviews));
-  }
-
+  const snapshot = await getDocs(collection(db, "reviews"));
+  let reviews = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
 if (reviews.length === 0) {
   document.getElementById("avgNumber").textContent = "(0.0)";
@@ -154,7 +152,7 @@ if (reviews.length === 0) {
   document.getElementById("avgStars").textContent = "★".repeat(fullStars);
 
   // RENDER CARDS
-  reviews.forEach((r, index) => {
+  reviews.forEach(r => {
     container.innerHTML += `
       <div class="col-md-4">
         <div class="testimonial-card h-100">
@@ -166,10 +164,7 @@ if (reviews.length === 0) {
           ${r.image ? `<img src="${r.image}" class="img-fluid rounded mt-3">` : ""}
           
           ${Admin.isEnabled() ? `
-            <button
-              class="btn admin-delete-btn mt-3 delete-btn"
-              data-id="${r.id}"
-            >
+            <button class="btn admin-delete-btn mt-3 delete-btn" data-id="${r.id}">
               Delete
             </button>
           ` : ""}
@@ -183,7 +178,7 @@ if (reviews.length === 0) {
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete-btn")) {
-    const id = Number(e.target.dataset.id);
+    const id = e.target.dataset.id;
     openDeleteModal(id);
   }
 });
@@ -237,16 +232,10 @@ function openDeleteModal(index) {
   modal.show();
 }
 
-document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => {
-  if (pendingDeleteIndex === null) return;
+document.getElementById("confirmDeleteBtn")?.addEventListener("click", async () => {
+  if (!pendingDeleteIndex) return;
 
-  const reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-  
-  const updatedReviews = reviews.filter(
-    r => r.id !== pendingDeleteIndex
-  );
-
-  localStorage.setItem("reviews", JSON.stringify(updatedReviews));
+  await deleteDoc(doc(db, "reviews", pendingDeleteIndex));
 
   pendingDeleteIndex = null;
 
@@ -263,17 +252,18 @@ stars.forEach((star) => {
     const value = Number(star.dataset.value);
     ratingInput.value = value;
 
-    stars.forEach((s) => {
-      if (Number(s.dataset.value) <= value) {
-        s.classList.remove("bi-star");
-        s.classList.add("bi-star-fill", "active");
-      } else {
-        s.classList.remove("bi-star-fill", "active");
-        s.classList.add("bi-star");
-      }
+    stars.forEach(s => {
+      s.classList.remove("bi-star-fill");
+      s.classList.add("bi-star");
     });
+
+    for (let i = 0; i < value; i++) {
+      stars[i].classList.remove("bi-star");
+      stars[i].classList.add("bi-star-fill");
+    }
   });
 });
+
 
 /* Image preview */
 imageInput.addEventListener("change", () => {
@@ -289,7 +279,7 @@ imageInput.addEventListener("change", () => {
 });
 
 /* Form submit  */
-form.addEventListener("submit", e => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const rating = ratingInput.value;
@@ -301,23 +291,24 @@ form.addEventListener("submit", e => {
     alert("Please add a rating and comment 💕");
     return;
   }
-
+  
   const review = {
-    id: Date.now(), // Unique ID for each review
     name: name || "Anonymous",
     rating: Number(rating),
     text,
     image,
-    date: new Date().toLocaleDateString()
+    date: new Date().toISOString()
   };
 
-  const reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-  reviews.push(review);
-  localStorage.setItem("reviews", JSON.stringify(reviews));
+  await addDoc(collection(db, "reviews"), review); 
 
   form.reset();
   imagePreview.classList.add("d-none");
-  stars.forEach(s => s.classList.remove("active"));
+  stars.forEach(s => {
+    s.classList.remove("bi-star-fill");
+    s.classList.add("bi-star");
+  });
+  ratingInput.value = "";
 
   renderReviews();
   alert("Thank you for your review! 🌸");

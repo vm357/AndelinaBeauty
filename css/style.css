@@ -456,8 +456,8 @@ body {
 
 .star-rating i {
   font-size: 1.8rem;
-  color: #d4af37;
   cursor: pointer;
+  color: #d4af37;
   transition: transform 0.2s ease;
 }
 
@@ -553,7 +553,6 @@ body {
   border: none;
 }
 
-
 /* Make modal background slightly darker and more elegant */
 .modal-content {
   background-color: rgba(255, 189, 213, 0.93);
@@ -564,7 +563,6 @@ body {
   max-height: 80vh;
   object-fit: contain;
 }
-
 /* END TESTIMONIALS.HTML PAGE - TESTIMONIALS SECTION */
 
 /* ABOUTUS.HTML PAGE - DESCRIPTION SECTION */
@@ -639,7 +637,6 @@ body {
   text-shadow: 0 6px 20px rgba(122, 18, 55, 0.25);
 }
 
-
 .carousel-inner img {
   height: 420px;
   object-fit: cover;
@@ -649,4 +646,3 @@ body {
   box-shadow: 0 30px 80px rgba(193, 24, 91, 0.25);
   transition: box-shadow 0.4s ease;
 }
-

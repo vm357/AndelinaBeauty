@@ -74,30 +74,6 @@
                 </div>
             </div>
 
-            <!-- admin only toggle button
-            <div class="text-center mb-4">
-                <button id="adminToggleBtn" class="btn btn-sm btn-outline-pink">
-                    Admin Mode
-                </button>
-            </div>
-            -->            
-
-            <!--
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="testimonial-card h-100">
-                        <div class="stars mb-3">
-                            ★★★★★
-                        </div>
-                        
-                        <p class="testimonial-quote">
-                            “Andelina Beauty transformed my nail game! The attention to detail is unmatched.”
-                        </p>
-                        <h6 class="testimonial-author">— Sarah J.</h6>
-                    </div>
-                </div>
-            </div>
-            -->
             <div class="row g-4" id="reviewsContainer"></div>
 
 
@@ -142,6 +118,27 @@
     </section>
     <!-- END Testimonials Section -->
 
+    <!-- FIREBASE SDK 
+    <script type="module">
+        import { initializeApp } from 
+            "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore } from 
+            "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbnsmA5MFnfz82Z_dv_xmYD6cbLY3nwV0",
+            authDomain: "andelina-beauty-reviews.firebaseapp.com",
+            projectId: "andelina-beauty-reviews",
+            storageBucket: "andelina-beauty-reviews.firebasestorage.app",
+            messagingSenderId: "675748450323",
+            appId: "1:675748450323:web:6c43e4453f9a61f59a6fe6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+    </script>
+    END FIREBASE SDK-->
+
     <!-- FOOTER -->
     <footer class="footer py-5">
         <div class="container text-center">
@@ -169,7 +166,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="js/reviews.js"></script>
+    <script type="module" src="js/reviews.js"></script>
 
     <!-- Image Lightbox Modal -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
@@ -209,7 +206,6 @@
             </div>
         </div>
     </div>
-
 
 </body>
 </html>
