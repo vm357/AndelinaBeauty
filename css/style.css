@@ -66,7 +66,7 @@ body {
 }
 
 .hero-new {
-  min-height: 100vh;
+  min-height: 55vh;
   background: linear-gradient(
     135deg,
     #f6bfcc,
@@ -78,7 +78,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  overflow: hidden;
+  overflow: none;
 }
 
 .hero-content {
@@ -145,15 +145,12 @@ body {
   animation-delay: 0.3s;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-}
 
-/*
-@media (max-width: 480px) {
-  .hero-title {
-    line-height: 1.15;
-  }
+  white-space: normal; /* allow wrapping */
+  word-wrap: break-word;
+  text-align: center;
+  padding: 0 1rem; /* prevent overflow on mobile */
 }
-*/
 
 @media (max-width: 480px) {
   .hero-title {
