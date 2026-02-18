@@ -159,9 +159,10 @@ body {
     padding: 0 1rem; /* prevent overflow */
   }
 
+  /*
   .hero-new {
-    min-height: 90vh; /* hero fills screen */
-  }
+    min-height: 90vh;
+  } */
 
   .container {
     padding-left: 1rem;
